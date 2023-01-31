@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 
 public class GameController : MonoBehaviour
 {
+    public GameObject player;
     public List<GameObject> roomsList;
     public List<float> rotationList;
 
@@ -16,6 +18,7 @@ public class GameController : MonoBehaviour
     public GameObject CameraMovingObject;
     private CameraMovement camMov;
 
+    public NavMeshSurface[] surfaces;
     public bool gameOver;
     void Start()
     {
@@ -43,6 +46,9 @@ public class GameController : MonoBehaviour
         roomIndex = GenerateIndex(0, roomsList.Count);
         rotationIndex = GenerateIndex(0, 4);
         GenerateRoom(roomIndex, rotationIndex);
+        player.transform.position = Vector3.zero;
+        CameraMovingObject.transform.position = Vector3.zero;
+        UpdateMesh();
     }
 
     private int GenerateIndex(int min, int max) { return Random.Range(min, max); }
@@ -69,16 +75,19 @@ public class GameController : MonoBehaviour
         camMov.StartGame();
     }
 
-    public void PlayAgainButton()
-    {
-        PrepareGame();
-        StartGame();
-    }
 
     public void GameOver()
     {
         gameOver = true;
         camMov.PauseGame();
+    }
+
+    public void UpdateMesh()
+    {
+        for (int i = 0; i < surfaces.Length; i++) 
+        {
+            surfaces [i].BuildNavMesh ();    
+        }    
     }
 
 }
