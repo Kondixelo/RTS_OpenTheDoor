@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class GameController : MonoBehaviour
 {
     public List<GameObject> roomsList;
@@ -12,9 +13,17 @@ public class GameController : MonoBehaviour
     private float rotation;
     private int rotationIndex; // random int seed to rotate rooms
 
+    public GameObject CameraMovingObject;
+    private CameraMovement camMov;
+
+    public bool gameOver;
     void Start()
     {
-        StartGame();
+        CheckPlayerPrefs();
+        camMov = CameraMovingObject.GetComponent<CameraMovement>();
+
+        PrepareGame();
+        gameOver = false;
     }
 
     // Update is called once per frame
@@ -23,15 +32,17 @@ public class GameController : MonoBehaviour
 
     }
 
+    private void CheckPlayerPrefs()
+    {
+        if (!PlayerPrefs.HasKey("highscore")){ PlayerPrefs.SetFloat("highscore", 0); }
+    }
 
-    public void StartGame()
+    public void PrepareGame()
     {
         DestoryOldRoom();
         roomIndex = GenerateIndex(0, roomsList.Count);
         rotationIndex = GenerateIndex(0, 4);
-
         GenerateRoom(roomIndex, rotationIndex);
-
     }
 
     private int GenerateIndex(int min, int max) { return Random.Range(min, max); }
@@ -51,6 +62,23 @@ public class GameController : MonoBehaviour
         {
             Destroy(oldRoom);
         }
+    }
+
+    public void StartGame()
+    {
+        camMov.StartGame();
+    }
+
+    public void PlayAgainButton()
+    {
+        PrepareGame();
+        StartGame();
+    }
+
+    public void GameOver()
+    {
+        gameOver = true;
+        camMov.PauseGame();
     }
 
 }
