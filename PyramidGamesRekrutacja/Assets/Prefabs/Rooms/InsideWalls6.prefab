@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1590058912205528394}
   - component: {fileID: 1590058912205528395}
   - component: {fileID: 1590058912205528396}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: InsideWalls6
   m_TagString: Room
   m_Icon: {fileID: 0}

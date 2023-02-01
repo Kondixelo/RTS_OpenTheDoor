@@ -5,12 +5,13 @@ using DG.Tweening;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
-{
+{   
     public GameObject gameControllerObject;
     private GameController gameController;
     public GameObject startMenu;
     public GameObject gameOnMenu;
     public GameObject gameOverMenu;
+    public GameObject messageMenu; 
 
     //Start Menu Elements
     private Button startButton, playAgainButton;
@@ -37,6 +38,8 @@ public class UIController : MonoBehaviour
     private Color blackTransparent = Color.black;
     
     private bool playAgain;
+
+    private GameObject interactedObject;
 
     void Start()
     {
@@ -132,6 +135,7 @@ public class UIController : MonoBehaviour
 
     private IEnumerator HideGameOnMenu()
     {
+        messageMenu.SetActive(false);
         PauseGame();
         Sequence seqHide = DOTween.Sequence()
             .Append(currentTimeGameOnText.transform.DOScale(Vector3.zero, 0.5f));
@@ -220,9 +224,93 @@ public class UIController : MonoBehaviour
 
     public void GameOver()
     {
-        gameController.GameOver();
         StartCoroutine(HideGameOnMenu());
     }
 
+
+    public void PointedObjectMessage(GameObject pointedObject)
+    {
+        interactedObject = pointedObject;
+        gameController.SetInteractedObject(interactedObject);
+        string message;
+        switch (interactedObject.tag){
+            case "Door":
+            case "Chest":
+                message = "Open?";
+                break;
+            case "Item":
+                message = "Take?";
+                break;
+            default:
+                message = "unknown command";
+                break;
+        }
+
+        messageMenu.SetActive(true);
+
+        GameObject textObject = messageMenu.transform.GetChild(0).gameObject;
+        textObject.SetActive(true);
+        Text textMessage = textObject.GetComponent<Text>();
+        textMessage.text = message;
+
+        GameObject yesButton = messageMenu.transform.GetChild(1).gameObject;
+        yesButton.SetActive(true);
+        GameObject noButton = messageMenu.transform.GetChild(2).gameObject;
+        noButton.SetActive(true);
+        GameObject okButton = messageMenu.transform.GetChild(3).gameObject;
+        okButton.SetActive(false);
+    }
+
+    public void InteractWithObject(){ //kliknieto YES
+        switch (interactedObject.tag){
+            case "Door":
+                gameController.OpenDoor();  
+                break;
+            case "Chest":
+                gameController.OpenChest();
+                messageMenu.SetActive(false);        
+                break;
+            case "Item":
+                gameController.AddItemtoInventory();
+                StartCoroutine(ItemMessage("You picked up a key"));
+                break;
+            default:
+                messageMenu.SetActive(false);
+                break;
+        }
+    }
+
+    public void DoNotIntercatWithObject(){
+        messageMenu.SetActive(false);
+    }
+
+    public void ConfirmMessage(){
+        messageMenu.SetActive(false);
+    }
+
+    
+    public IEnumerator ItemMessage(string message){
+        messageMenu.SetActive(true);
+        GameObject textObject = messageMenu.transform.GetChild(0).gameObject;
+        textObject.SetActive(true);
+        Text textMessage = textObject.GetComponent<Text>();
+        textMessage.text = message;
+
+
+        GameObject yesButton = messageMenu.transform.GetChild(1).gameObject;
+        yesButton.SetActive(false);
+        GameObject noButton = messageMenu.transform.GetChild(2).gameObject;
+        noButton.SetActive(false);
+        GameObject okButton = messageMenu.transform.GetChild(3).gameObject;
+        okButton.SetActive(false);
+
+        Sequence seqShow = DOTween.Sequence()
+            .SetDelay(2f)
+            .Append(textMessage.DOFade(0f, 0f));
+
+        yield return seqShow.WaitForCompletion();
+        messageMenu.SetActive(false);
+        playAgain = true;
+    }
 
 }

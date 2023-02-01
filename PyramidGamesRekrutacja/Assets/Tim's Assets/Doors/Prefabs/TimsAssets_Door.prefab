@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 23000011018340992}
   m_Layer: 7
   m_Name: Door_Lock_Part_002
-  m_TagString: Untagged
+  m_TagString: Chest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -270,7 +270,7 @@ GameObject:
   - component: {fileID: 23000013238690908}
   m_Layer: 7
   m_Name: Door_Lock_Part_001
-  m_TagString: Untagged
+  m_TagString: Chest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -437,7 +437,7 @@ GameObject:
   - component: {fileID: 65000011924577728}
   m_Layer: 7
   m_Name: Door_Main1
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
