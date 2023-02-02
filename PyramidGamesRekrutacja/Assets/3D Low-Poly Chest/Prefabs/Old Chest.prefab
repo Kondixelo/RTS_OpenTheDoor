@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 936726435520118136}
   m_Layer: 7
   m_Name: Old Chest
-  m_TagString: Untagged
+  m_TagString: Chest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 8187517042728229358}
   - component: {fileID: 1525212474817653984}
   - component: {fileID: 2107242898863739809}
+  - component: {fileID: 1093254798341045180}
   m_Layer: 7
   m_Name: chest cover
   m_TagString: Chest
@@ -217,6 +218,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -3429641826558516864, guid: 76dbb1ea1734346499c908c2187850ba, type: 3}
+--- !u!114 &1093254798341045180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8264260236098961257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940e394715264cc429b7356069fde140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6068420088087363803
 PrefabInstance:
   m_ObjectHideFlags: 0

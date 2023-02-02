@@ -40,6 +40,7 @@ public class UIController : MonoBehaviour
     private bool playAgain;
 
     private GameObject interactedObject;
+    private ObjectInteraction objectInteraction;
 
     private GameObject textObject;
     private Text textMessage;
@@ -56,7 +57,6 @@ public class UIController : MonoBehaviour
         startMenu.transform.localScale = Vector3.zero;
         gameOverMenu.transform.localScale = Vector3.zero;
 
-        
 
         startButton = startMenu.transform.GetChild(1).gameObject.GetComponent<Button>();
         bestTimeStartMenuText = startMenu.transform.GetChild(2).gameObject.GetComponent<Text>();
@@ -267,15 +267,20 @@ public class UIController : MonoBehaviour
                 message = "unknown command";
                 break;
         }
+        objectInteraction = interactedObject.GetComponent<ObjectInteraction>();
+        bool objectOpened = objectInteraction.GetOpenStatus();
+        if (!objectOpened)
+        {
+            messageMenu.SetActive(true);
 
-        messageMenu.SetActive(true);
+            textObject.SetActive(true);
+            textMessage.text = message;
 
-        textObject.SetActive(true);
-        textMessage.text = message;
+            yesButton.SetActive(true);
+            noButton.SetActive(true);
+            okButton.SetActive(false);
+        }
 
-        yesButton.SetActive(true);
-        noButton.SetActive(true);
-        okButton.SetActive(false);
     }
 
     public void InteractWithObject(){ //kliknieto YES
