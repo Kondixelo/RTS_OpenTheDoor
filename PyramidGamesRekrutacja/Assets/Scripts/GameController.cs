@@ -48,10 +48,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            SpawnChest();
-        }
+
     }
 
 
@@ -116,7 +113,6 @@ public class GameController : MonoBehaviour
         if (oldChest != null){ Destroy(oldChest); }
     }
 
-    
 
 
 
@@ -172,7 +168,7 @@ public class GameController : MonoBehaviour
             GameOver();
         }else
         {
-            StartCoroutine(uIController.ItemMessage("You need a key!"));
+            uIController.ItemMessage("You need a key!", true);
         }
     }
 

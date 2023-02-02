@@ -31,11 +31,10 @@ public class PlayerMovement : MonoBehaviour
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hitPoint;
-                if (Physics.Raycast(ray,out hitPoint, Mathf.Infinity)){
-                    Debug.Log(hitPoint.collider.gameObject.layer);
-                    Debug.Log(groundMask);
-
-                    if (hitPoint.collider.gameObject.layer == groundMask){
+                if (Physics.Raycast(ray,out hitPoint, Mathf.Infinity))
+                {
+                    if (hitPoint.collider.gameObject.layer == groundMask)
+                    {
                         MoveTo(hitPoint.point);
                     }                
                 }
@@ -61,8 +60,10 @@ public class PlayerMovement : MonoBehaviour
     public void PauseGame() { gameON = false; }
 
 
-    public void ResetPlayerPosition(){
-        gameObject.transform.SetPositionAndRotation(Vector3.zero,Quaternion.identity);
+    public void ResetPlayerPosition()
+    {
+        gameObject.transform.GetComponent<NavMeshAgent>().nextPosition = Vector3.zero;
+        MoveTo(Vector3.zero);
     }
 
 }

@@ -41,6 +41,14 @@ public class UIController : MonoBehaviour
 
     private GameObject interactedObject;
 
+    private GameObject textObject;
+    private Text textMessage;
+
+    private GameObject yesButton;
+    private GameObject noButton;
+    private GameObject okButton;
+ 
+
     void Start()
     {
         playAgain = false;
@@ -68,6 +76,13 @@ public class UIController : MonoBehaviour
         blackImage = blackScreenObject.GetComponent<Image>();
         blackTransparent.a = 0f;
         StartCoroutine(FadeOutBlackScreen());
+
+        textObject = messageMenu.transform.GetChild(0).gameObject;
+        textMessage = textObject.GetComponent<Text>();
+
+        yesButton = messageMenu.transform.GetChild(1).gameObject;
+        noButton = messageMenu.transform.GetChild(2).gameObject;
+        okButton = messageMenu.transform.GetChild(3).gameObject;
     }
 
     void Update()
@@ -248,31 +263,27 @@ public class UIController : MonoBehaviour
 
         messageMenu.SetActive(true);
 
-        GameObject textObject = messageMenu.transform.GetChild(0).gameObject;
         textObject.SetActive(true);
-        Text textMessage = textObject.GetComponent<Text>();
         textMessage.text = message;
 
-        GameObject yesButton = messageMenu.transform.GetChild(1).gameObject;
         yesButton.SetActive(true);
-        GameObject noButton = messageMenu.transform.GetChild(2).gameObject;
         noButton.SetActive(true);
-        GameObject okButton = messageMenu.transform.GetChild(3).gameObject;
         okButton.SetActive(false);
     }
 
     public void InteractWithObject(){ //kliknieto YES
         switch (interactedObject.tag){
             case "Door":
-                gameController.OpenDoor();  
+                messageMenu.SetActive(false); 
+                gameController.OpenDoor();
                 break;
             case "Chest":
-                gameController.OpenChest();
-                messageMenu.SetActive(false);        
+                messageMenu.SetActive(false);  
+                gameController.OpenChest();      
                 break;
             case "Item":
                 gameController.AddItemtoInventory();
-                StartCoroutine(ItemMessage("You picked up a key"));
+                ItemMessage("You picked up a key", false);
                 break;
             default:
                 messageMenu.SetActive(false);
@@ -280,37 +291,37 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void DoNotIntercatWithObject(){
+    public void DoNotIntercatWithObject(){ // clicked NO
         messageMenu.SetActive(false);
     }
 
-    public void ConfirmMessage(){
+    public void ConfirmMessage(){ // CLicked ok
         messageMenu.SetActive(false);
     }
 
     
-    public IEnumerator ItemMessage(string message){
+    public void ItemMessage(string message, bool activeOkButton){
+        Debug.Log("siema");
         messageMenu.SetActive(true);
-        GameObject textObject = messageMenu.transform.GetChild(0).gameObject;
         textObject.SetActive(true);
-        Text textMessage = textObject.GetComponent<Text>();
         textMessage.text = message;
 
 
-        GameObject yesButton = messageMenu.transform.GetChild(1).gameObject;
         yesButton.SetActive(false);
-        GameObject noButton = messageMenu.transform.GetChild(2).gameObject;
         noButton.SetActive(false);
-        GameObject okButton = messageMenu.transform.GetChild(3).gameObject;
-        okButton.SetActive(false);
-
-        Sequence seqShow = DOTween.Sequence()
-            .SetDelay(2f)
-            .Append(textMessage.DOFade(0f, 0f));
-
-        yield return seqShow.WaitForCompletion();
-        messageMenu.SetActive(false);
-        playAgain = true;
+        if (activeOkButton)
+        {
+            Debug.Log("siema2");
+            okButton.SetActive(true);
+        }else
+        {
+            Debug.Log("siema3");
+            StartCoroutine(CloseMessageMenuAfter(3));
+        }
     }
 
+    public IEnumerator CloseMessageMenuAfter(int seconds){
+        yield return new WaitForSeconds(seconds);
+        messageMenu.SetActive(false);
+    }
 }
