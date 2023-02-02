@@ -58,7 +58,9 @@ public class PlayerInteractions : MonoBehaviour
     }
 
     public IEnumerator InspectObject(Vector3 objectPosition){
-        playerMov.MoveTo(objectPosition);
+        if (distanceFromObject > 3){
+            playerMov.MoveTo(objectPosition);
+        }
         yield return new WaitUntil( () => distanceFromObject <= 3);
         uIController.PointedObjectMessage(pointedObject);
     }

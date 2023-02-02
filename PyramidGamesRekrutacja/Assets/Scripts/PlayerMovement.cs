@@ -11,11 +11,17 @@ public class PlayerMovement : MonoBehaviour
     private int groundMask;
     Renderer rend;
     private bool gameON;
+
+    private GameObject humanObject;
+    private Animator humanAnimator;
+
     void Start()
     {
         PauseGame(); 
         player = gameObject.GetComponent<NavMeshAgent>();
         groundMask = LayerMask.NameToLayer("Ground");
+        humanObject = player.transform.GetChild(0).gameObject;
+        humanAnimator = humanObject.GetComponent<Animator>();
     }
     void Update()
     {
@@ -35,6 +41,14 @@ public class PlayerMovement : MonoBehaviour
                 }
             }   
         }
+
+        if (player.velocity == Vector3.zero)
+        {
+            humanAnimator.SetBool("isWalking", false);
+        }else
+        {
+            humanAnimator.SetBool("isWalking", true);
+        }
  
     }
 
@@ -45,5 +59,10 @@ public class PlayerMovement : MonoBehaviour
     public void StartGame() { gameON = true; }
 
     public void PauseGame() { gameON = false; }
+
+
+    public void ResetPlayerPosition(){
+        gameObject.transform.SetPositionAndRotation(Vector3.zero,Quaternion.identity);
+    }
 
 }

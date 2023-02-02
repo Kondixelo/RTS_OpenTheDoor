@@ -64,6 +64,7 @@ public class GameController : MonoBehaviour
     public void PrepareGame()
     {
         playerMov.PauseGame();
+        playerMov.ResetPlayerPosition();
         playerInters.PauseGame();
         playerInv.SetNewEmptyInventory();
         
@@ -74,7 +75,6 @@ public class GameController : MonoBehaviour
         DestroyOldChest();
         SpawnChest();
 
-        player.transform.position = Vector3.zero;
         CameraMovingObject.transform.position = Vector3.zero;
         UpdateMesh();
     }
