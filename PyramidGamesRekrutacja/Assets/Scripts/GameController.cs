@@ -169,7 +169,6 @@ public class GameController : MonoBehaviour
             GameObject doorAsset = wood.transform.parent.gameObject;
             Animator doorAnimator = doorAsset.GetComponent<Animator>();
             doorAnimator.SetBool("open",true);
-            
             GameOver();
         }else
         {
