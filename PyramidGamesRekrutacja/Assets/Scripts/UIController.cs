@@ -58,14 +58,14 @@ public class UIController : MonoBehaviour
 
         
 
-        startButton = startMenu.transform.GetChild(0).gameObject.GetComponent<Button>();
-        bestTimeStartMenuText = startMenu.transform.GetChild(1).gameObject.GetComponent<Text>();
+        startButton = startMenu.transform.GetChild(1).gameObject.GetComponent<Button>();
+        bestTimeStartMenuText = startMenu.transform.GetChild(2).gameObject.GetComponent<Text>();
         
-        currentTimeGameOnText = gameOnMenu.transform.GetChild(0).gameObject.GetComponent<Text>();
+        currentTimeGameOnText = gameOnMenu.transform.GetChild(1).gameObject.GetComponent<Text>();
 
-        currentTimeGameOverText = gameOverMenu.transform.GetChild(0).gameObject.GetComponent<Text>();
-        bestTimeGameOverText = gameOverMenu.transform.GetChild(1).gameObject.GetComponent<Text>();
-        playAgainButton = gameOverMenu.transform.GetChild(2).gameObject.GetComponent<Button>();
+        currentTimeGameOverText = gameOverMenu.transform.GetChild(1).gameObject.GetComponent<Text>();
+        bestTimeGameOverText = gameOverMenu.transform.GetChild(2).gameObject.GetComponent<Text>();
+        playAgainButton = gameOverMenu.transform.GetChild(3).gameObject.GetComponent<Button>();
 
         currentTimeGameOnText.transform.localScale = Vector3.zero;
         PauseGame();
@@ -77,12 +77,12 @@ public class UIController : MonoBehaviour
         blackTransparent.a = 0f;
         StartCoroutine(FadeOutBlackScreen());
 
-        textObject = messageMenu.transform.GetChild(0).gameObject;
+        textObject = messageMenu.transform.GetChild(1).gameObject;
         textMessage = textObject.GetComponent<Text>();
 
-        yesButton = messageMenu.transform.GetChild(1).gameObject;
-        noButton = messageMenu.transform.GetChild(2).gameObject;
-        okButton = messageMenu.transform.GetChild(3).gameObject;
+        yesButton = messageMenu.transform.GetChild(2).gameObject;
+        noButton = messageMenu.transform.GetChild(3).gameObject;
+        okButton = messageMenu.transform.GetChild(4).gameObject;
     }
 
     void Update()
@@ -218,23 +218,30 @@ public class UIController : MonoBehaviour
     {   
         CheckTimes();
         
-        currentTimeGameOverText.text = "Current Score: " + string.Format("{0:00}:{1:00}", + timerMinutes, Mathf.Round(timerSeconds));
+        currentTimeGameOverText.text = "Current Score: \n" + string.Format("{0:00}:{1:00}", + timerMinutes, Mathf.Round(timerSeconds));
 
         float highScoreTime = PlayerPrefs.GetFloat("highscore");
         float bestMinutes = Mathf.Floor(highScoreTime/60);
         float bestSeconds = highScoreTime%60;
         
-        bestTimeGameOverText.text = "HighScore: "  + string.Format("{0:00}:{1:00}", + bestMinutes, Mathf.Round(bestSeconds));
-        bestTimeStartMenuText.text = "HighScore: "  + string.Format("{0:00}:{1:00}", + bestMinutes, Mathf.Round(bestSeconds));
+        bestTimeGameOverText.text = "HighScore: \n"  + string.Format("{0:00}:{1:00}", + bestMinutes, Mathf.Round(bestSeconds));
+        bestTimeStartMenuText.text = "HighScore: \n"  + string.Format("{0:00}:{1:00}", + bestMinutes, Mathf.Round(bestSeconds));
         countTime = false;
     }
 
     private void CheckTimes()
     {
-        if (currentTime < PlayerPrefs.GetFloat("highscore"))
+        if (PlayerPrefs.GetFloat("highscore") == 0)
         {
             PlayerPrefs.SetFloat("highscore", currentTime);
+        }else
+        {
+            if (currentTime < PlayerPrefs.GetFloat("highscore"))
+            {
+                PlayerPrefs.SetFloat("highscore", currentTime);
+            }
         }
+        
     }
 
     public void GameOver()
@@ -301,7 +308,6 @@ public class UIController : MonoBehaviour
 
     
     public void ItemMessage(string message, bool activeOkButton){
-        Debug.Log("siema");
         messageMenu.SetActive(true);
         textObject.SetActive(true);
         textMessage.text = message;
@@ -311,11 +317,9 @@ public class UIController : MonoBehaviour
         noButton.SetActive(false);
         if (activeOkButton)
         {
-            Debug.Log("siema2");
             okButton.SetActive(true);
         }else
         {
-            Debug.Log("siema3");
             StartCoroutine(CloseMessageMenuAfter(3));
         }
     }
