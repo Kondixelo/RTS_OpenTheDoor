@@ -10,7 +10,7 @@ public class ObjectInteraction : MonoBehaviour
         opened = false;
     }
 
-    public bool GetOpenStatus(){ return opened; }
+    public bool GetOpenStatus() { return opened; }
 
     public void SetOpenStatus(bool openStatus) { opened = openStatus;}
 }

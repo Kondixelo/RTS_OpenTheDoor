@@ -7,20 +7,19 @@ using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private NavMeshAgent player;
     private int groundMask;
-    Renderer rend;
     private bool gameON;
 
-    private GameObject humanObject;
-    private Animator humanAnimator;
+    private GameObject humanObject; //Object with human model
+    private Animator humanAnimator; //Animator component in human model
+    private NavMeshAgent playerAgent; //NavMeshAgent component in this game object 
 
     void Start()
     {
-        PauseGame(); 
-        player = gameObject.GetComponent<NavMeshAgent>();
+        SetGameStatus(false); 
+        playerAgent = gameObject.GetComponent<NavMeshAgent>();
         groundMask = LayerMask.NameToLayer("Ground");
-        humanObject = player.transform.GetChild(0).gameObject;
+        humanObject = gameObject.transform.GetChild(0).gameObject;
         humanAnimator = humanObject.GetComponent<Animator>();
     }
     void Update()
@@ -41,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
             }   
         }
 
-        if (player.velocity == Vector3.zero)
+        if (playerAgent.velocity == Vector3.zero)
         {
             humanAnimator.SetBool("isWalking", false);
         }else
@@ -51,18 +50,16 @@ public class PlayerMovement : MonoBehaviour
  
     }
 
-    public void MoveTo(Vector3 destination){
-        player.SetDestination(destination);
+    public void MoveTo(Vector3 destination) //Move player to the set destination
+    {
+        playerAgent.SetDestination(destination);
     }
 
-    public void StartGame() { gameON = true; }
-
-    public void PauseGame() { gameON = false; }
-
+    public void SetGameStatus(bool gameOnStatus) { gameON = gameOnStatus; }
 
     public void ResetPlayerPosition()
     {
-        gameObject.transform.GetComponent<NavMeshAgent>().nextPosition = Vector3.zero;
+        gameObject.transform.GetComponent<NavMeshAgent>().Warp(Vector3.zero);
         MoveTo(Vector3.zero);
     }
 

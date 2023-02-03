@@ -4,24 +4,24 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 public class PlayerInteractions : MonoBehaviour
 {
+    public UIController uIController; //Object with UIController script
+    
     public LayerMask objectMask;
     private bool gameON;
-    private PlayerInventory playerInv;
 
+    //Scripts attached to game object
+    private PlayerInventory playerInv;
     private PlayerMovement playerMov;
 
-    public UIController uIController;
-
-    private GameObject pointedObject;
-    private Material[] objectMaterials;
+    private GameObject pointedObject; //Object which player has pointed
+    private Material[] objectMaterials; //Material components pointed objects
 
     private float distanceFromObject;
     void Start()
     {
         playerInv = gameObject.GetComponent<PlayerInventory>();
         playerMov = gameObject.GetComponent<PlayerMovement>();
-
-        PauseGame();
+        SetGameStatus(false);
     }
     void Update()
     {
@@ -57,17 +57,14 @@ public class PlayerInteractions : MonoBehaviour
         }  
     }
 
-    public IEnumerator InspectObject(Vector3 objectPosition){
-        if (distanceFromObject > 3){
-            playerMov.MoveTo(objectPosition);
-        }
+    public IEnumerator InspectObject(Vector3 objectPosition) //Inspect object and wait until distance from object object will be lass than 3 to show message 
+    {
+        if (distanceFromObject > 3) { playerMov.MoveTo(objectPosition); }
         yield return new WaitUntil( () => distanceFromObject <= 3);
         uIController.PointedObjectMessage(pointedObject);
     }
 
 
-    public void StartGame() { gameON = true; }
-
-    public void PauseGame() { gameON = false; }
+    public void SetGameStatus(bool gameOnStatus) { gameON = gameOnStatus; }
 
 }

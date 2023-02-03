@@ -15,7 +15,7 @@ public class NavMeshBakerObject : MonoBehaviour
     {
         for (int i = 0; i < surfaces.Length; i++) 
         {
-            surfaces [i].BuildNavMesh ();    
+            surfaces [i].BuildNavMesh();    
         }    
     }
 }

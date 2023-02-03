@@ -14,7 +14,7 @@ public class CameraMovement : MonoBehaviour
 
     void Start()
     {
-        PauseGame();
+        SetGameStatus(false);
     }
 
     void Update()
@@ -53,8 +53,5 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-
-    public void StartGame() { gameON = true; }
-
-    public void PauseGame() { gameON = false; }
+    public void SetGameStatus(bool gameOnStatus) { gameON = gameOnStatus; }
 }

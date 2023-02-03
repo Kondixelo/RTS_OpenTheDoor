@@ -6,45 +6,50 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {   
+    [Header("Menus Section")]
     public GameObject gameControllerObject;
-    private GameController gameController;
     public GameObject startMenu;
     public GameObject gameOnMenu;
     public GameObject gameOverMenu;
-    public GameObject messageMenu; 
+    public GameObject messageMenu;
+
+    [Header("Menus additions")]
+    [Tooltip("Black Image to make fading in/out effect")]
+    public GameObject blackScreenObject;
+    [Tooltip("How long fade in/out effect lasts")]
+    public float fadingTime;
+
 
     //Start Menu Elements
     private Button startButton, playAgainButton;
     private Text bestTimeStartMenuText, currentTimeGameOnText, currentTimeGameOverText, bestTimeGameOverText;
 
 
-    private bool countTime;
-
-    //PlayerPrefs variable
+    //PlayerPrefs variables
     private float currentTime;
     private float bestTime;
 
     //UI variables 
     private float timerSeconds;
     private float timerMinutes;
+    private bool countTime;
 
+    private GameController gameController; //Script attached to game controller object
 
-    public float fadingTime;
-    public GameObject blackScreenObject;
-    private Image blackImage;
-    private Image logoImage;
+    private Image blackImage; //Black screen object Image component
 
+    //Black Image colors used in fade in/out effects
     private Color blackOpaque = Color.black;
-    private Color blackTransparent = Color.black;
+    private Color blackTransparent = new Color(0f, 0f,0f,0f);
     
-    private bool playAgain;
+    private bool playAgain; 
 
-    private GameObject interactedObject;
-    private ObjectInteraction objectInteraction;
+    private GameObject interactedObject; //Object which player has interactions
+    private ObjectInteraction objectInteraction; //Script attached to interacted object
 
+    //Message menu elements
     private GameObject textObject;
     private Text textMessage;
-
     private GameObject yesButton;
     private GameObject noButton;
     private GameObject okButton;
@@ -53,36 +58,37 @@ public class UIController : MonoBehaviour
     void Start()
     {
         playAgain = false;
+
         gameController = gameControllerObject.GetComponent<GameController>();
-        startMenu.transform.localScale = Vector3.zero;
-        gameOverMenu.transform.localScale = Vector3.zero;
-
-
+        //Start Menu
         startButton = startMenu.transform.GetChild(1).gameObject.GetComponent<Button>();
         bestTimeStartMenuText = startMenu.transform.GetChild(2).gameObject.GetComponent<Text>();
-        
+        //Game ON Menu
         currentTimeGameOnText = gameOnMenu.transform.GetChild(1).gameObject.GetComponent<Text>();
-
+        //Game Over Menu
         currentTimeGameOverText = gameOverMenu.transform.GetChild(1).gameObject.GetComponent<Text>();
         bestTimeGameOverText = gameOverMenu.transform.GetChild(2).gameObject.GetComponent<Text>();
         playAgainButton = gameOverMenu.transform.GetChild(3).gameObject.GetComponent<Button>();
 
-        currentTimeGameOnText.transform.localScale = Vector3.zero;
-        PauseGame();
-        startMenu.SetActive(false);
-        gameOnMenu.SetActive(false);
-        gameOverMenu.SetActive(false);
-
-        blackImage = blackScreenObject.GetComponent<Image>();
-        blackTransparent.a = 0f;
-        StartCoroutine(FadeOutBlackScreen());
-
+        //Message menu objects and components 
         textObject = messageMenu.transform.GetChild(1).gameObject;
         textMessage = textObject.GetComponent<Text>();
-
         yesButton = messageMenu.transform.GetChild(2).gameObject;
         noButton = messageMenu.transform.GetChild(3).gameObject;
         okButton = messageMenu.transform.GetChild(4).gameObject;
+        //Some ui scales;
+        startMenu.transform.localScale = Vector3.zero;
+        gameOverMenu.transform.localScale = Vector3.zero;
+        currentTimeGameOnText.transform.localScale = Vector3.zero;
+        //Turn of All Menus
+        startMenu.SetActive(false);
+        gameOnMenu.SetActive(false);
+        gameOverMenu.SetActive(false);
+        blackScreenObject.SetActive(true);
+        blackImage = blackScreenObject.GetComponent<Image>();
+
+        PauseGame();
+        StartCoroutine(FadeOutBlackScreen());
     }
 
     void Update()
@@ -101,18 +107,18 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void StartButtonClick()
+    public void StartButtonClick() //Start Button
     {
         StartCoroutine(HideStartMenu());
     }
 
-        public void PlayAgainButtonClick()
+    public void PlayAgainButtonClick() //Play Again Button
     {
         StartCoroutine(HideGameOverMenu());
         StartCoroutine(FadeInBlackScreen());
     }
 
-    private IEnumerator ShowStartMenu() //
+    private IEnumerator ShowStartMenu() //Show Start Menu
     {
         startMenu.SetActive(true);
         Sequence seqShow = DOTween.Sequence()
@@ -122,7 +128,7 @@ public class UIController : MonoBehaviour
     }
 
 
-    private IEnumerator HideStartMenu() //hide start menu and show GAME ON menu
+    private IEnumerator HideStartMenu() //Hide Start Menu and show Game ON Menu
     {
         Sequence seqHide = DOTween.Sequence()
             .Append(startMenu.transform.DOScale(Vector3.zero, 0.5f));
@@ -132,7 +138,7 @@ public class UIController : MonoBehaviour
         StartCoroutine(ShowGameOnMenu());
     }
 
-    private IEnumerator ShowGameOnMenu()
+    private IEnumerator ShowGameOnMenu() //Show Game ON Menu (start game)
     {
         gameOnMenu.SetActive(true);
         Sequence seqShow = DOTween.Sequence()
@@ -148,7 +154,7 @@ public class UIController : MonoBehaviour
 
     }
 
-    private IEnumerator HideGameOnMenu()
+    private IEnumerator HideGameOnMenu() //Hide Game ON Menu nad show Game Over Menu
     {
         messageMenu.SetActive(false);
         PauseGame();
@@ -160,7 +166,7 @@ public class UIController : MonoBehaviour
         StartCoroutine(ShowGameOverMenu());
     }
 
-    private IEnumerator ShowGameOverMenu()
+    private IEnumerator ShowGameOverMenu() //Show Game Over Menu
     {
         gameOverMenu.SetActive(true);
 
@@ -170,7 +176,7 @@ public class UIController : MonoBehaviour
         yield return seqShow.WaitForCompletion();
     }
 
-    private IEnumerator HideGameOverMenu()
+    private IEnumerator HideGameOverMenu() //Hide Game Over Menu
     {
         Sequence seqHide = DOTween.Sequence()
             .Append(gameOverMenu.transform.DOScale(Vector3.zero, 0.5f));
@@ -179,9 +185,19 @@ public class UIController : MonoBehaviour
         gameOverMenu.SetActive(false);
     }
 
+    private IEnumerator FadeInBlackScreen() //Do fade IN black screen effect, Start fade OUT black screen effect and Prepare another game
+    {
+        blackImage.gameObject.SetActive(true);
+        Sequence seqIn = DOTween.Sequence()
+            .Append(blackImage.DOColor(blackOpaque, fadingTime));
 
+        yield return seqIn.WaitForCompletion();
+        playAgain = true;
+        StartCoroutine(FadeOutBlackScreen());
+        gameController.PrepareGame();
+    }
 
-    private IEnumerator FadeOutBlackScreen()
+    private IEnumerator FadeOutBlackScreen()//Do the fade OUT black screen effect, Show Game ON Menu or Strat Menu
     {
         Sequence seqOut = DOTween.Sequence()
            .Append(blackImage.DOColor(blackTransparent, fadingTime))
@@ -192,29 +208,15 @@ public class UIController : MonoBehaviour
         if (playAgain)
         {
             StartCoroutine(ShowGameOnMenu());
-            playAgain = false;
-                    
+            playAgain = false;                    
         }else
         {
             StartCoroutine(ShowStartMenu());
         }
-
     }
 
-    private IEnumerator FadeInBlackScreen()
-    {
-        blackImage.gameObject.SetActive(true);
-        Sequence seqIn = DOTween.Sequence()
-            .Append(blackImage.DOColor(blackOpaque, fadingTime));
 
-        yield return seqIn.WaitForCompletion();
-        playAgain = true;
-        StartCoroutine(FadeOutBlackScreen());
-        gameController.PrepareGame();
-
-    }
-    
-    public void PauseGame() 
+    public void PauseGame() //When Game On Menu has been hide;
     {   
         CheckTimes();
         
@@ -229,7 +231,7 @@ public class UIController : MonoBehaviour
         countTime = false;
     }
 
-    private void CheckTimes()
+    private void CheckTimes() // Compare current time with highscore
     {
         if (PlayerPrefs.GetFloat("highscore") == 0)
         {
@@ -240,8 +242,7 @@ public class UIController : MonoBehaviour
             {
                 PlayerPrefs.SetFloat("highscore", currentTime);
             }
-        }
-        
+        }    
     }
 
     public void GameOver()
@@ -250,7 +251,7 @@ public class UIController : MonoBehaviour
     }
 
 
-    public void PointedObjectMessage(GameObject pointedObject)
+    public void PointedObjectMessage(GameObject pointedObject) //Set pointed object as a interacted object and do sth due to what is object
     {
         interactedObject = pointedObject;
         gameController.SetInteractedObject(interactedObject);
@@ -283,7 +284,7 @@ public class UIController : MonoBehaviour
 
     }
 
-    public void InteractWithObject(){ //kliknieto YES
+    public void InteractWithObject(){ //YES Button
         switch (interactedObject.tag){
             case "Door":
                 messageMenu.SetActive(false); 
@@ -303,20 +304,15 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void DoNotIntercatWithObject(){ // clicked NO
-        messageMenu.SetActive(false);
-    }
-
-    public void ConfirmMessage(){ // CLicked ok
-        messageMenu.SetActive(false);
-    }
-
-    
-    public void ItemMessage(string message, bool activeOkButton){
+    public void DoNotIntercatWithObject() { messageMenu.SetActive(false);} //NO Button
+        
+    public void ConfirmMessage() { messageMenu.SetActive(false); }// OK Button
+        
+    public void ItemMessage(string message, bool activeOkButton) //Active message menu, show message/show message and Kk button
+    {
         messageMenu.SetActive(true);
         textObject.SetActive(true);
         textMessage.text = message;
-
 
         yesButton.SetActive(false);
         noButton.SetActive(false);
@@ -329,7 +325,8 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public IEnumerator CloseMessageMenuAfter(int seconds){
+    public IEnumerator CloseMessageMenuAfter(int seconds) // Close Messange Menu after X Seconds
+    {
         yield return new WaitForSeconds(seconds);
         messageMenu.SetActive(false);
     }
