@@ -113,6 +113,7 @@ public class GameController : MonoBehaviour
         chestPreefab.transform.localScale = new Vector3(2f,2f,2f);
 
         Instantiate(chestPreefab, chestPos, Quaternion.Euler(0f,spawnRotY,0f));
+        UpdateMesh();
     }
 
     private void DestoryOldRoom() //Destroy old room
