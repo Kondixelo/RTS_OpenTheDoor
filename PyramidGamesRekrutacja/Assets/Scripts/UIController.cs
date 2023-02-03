@@ -19,6 +19,15 @@ public class UIController : MonoBehaviour
     [Tooltip("How long fade in/out effect lasts")]
     public float fadingTime;
 
+    [Space(5f)]
+
+    [Header("Menus additions")]
+    [Tooltip("Sound when message menu appears")]
+    public AudioClip messageMenuSound;
+    [Tooltip("Sound when any button is clicked")]
+    public AudioClip buttonSound;
+    [Tooltip("Sound when game is over")]
+    public AudioClip gameOverSound;
 
     //Start Menu Elements
     private Button startButton, playAgainButton;
@@ -109,11 +118,13 @@ public class UIController : MonoBehaviour
 
     public void StartButtonClick() //Start Button
     {
+        SoundManager.PlaySound(buttonSound,1f);
         StartCoroutine(HideStartMenu());
     }
 
     public void PlayAgainButtonClick() //Play Again Button
     {
+        SoundManager.PlaySound(buttonSound,1f);
         StartCoroutine(HideGameOverMenu());
         StartCoroutine(FadeInBlackScreen());
     }
@@ -248,11 +259,13 @@ public class UIController : MonoBehaviour
     public void GameOver()
     {
         StartCoroutine(HideGameOnMenu());
+        SoundManager.PlaySound(gameOverSound,0.5f);
     }
 
 
     public void PointedObjectMessage(GameObject pointedObject) //Set pointed object as a interacted object and do sth due to what is object
     {
+        SoundManager.PlaySound(messageMenuSound,1f);
         interactedObject = pointedObject;
         gameController.SetInteractedObject(interactedObject);
         string message;
@@ -285,6 +298,7 @@ public class UIController : MonoBehaviour
     }
 
     public void InteractWithObject(){ //YES Button
+        SoundManager.PlaySound(buttonSound,1f);
         switch (interactedObject.tag){
             case "Door":
                 messageMenu.SetActive(false); 
@@ -304,12 +318,22 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void DoNotIntercatWithObject() { messageMenu.SetActive(false);} //NO Button
+    public void DoNotIntercatWithObject() //NO Button
+    { 
+        SoundManager.PlaySound(buttonSound,1f);
+        messageMenu.SetActive(false);
+    } 
+            
+    public void ConfirmMessage() // OK Button
+    { 
+        SoundManager.PlaySound(buttonSound,1f);
+        messageMenu.SetActive(false); 
+    }
+
         
-    public void ConfirmMessage() { messageMenu.SetActive(false); }// OK Button
-        
-    public void ItemMessage(string message, bool activeOkButton) //Active message menu, show message/show message and Kk button
+    public void ItemMessage(string message, bool activeOkButton) //Active message menu, show message/show message and Ok button
     {
+        SoundManager.PlaySound(messageMenuSound,1f);
         messageMenu.SetActive(true);
         textObject.SetActive(true);
         textMessage.text = message;

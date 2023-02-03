@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public AudioClip WalkingSound;
+    public AudioClip pointDestinationSound;
     private int groundMask;
     private bool gameON;
 
@@ -14,6 +16,10 @@ public class PlayerMovement : MonoBehaviour
     private Animator humanAnimator; //Animator component in human model
     private NavMeshAgent playerAgent; //NavMeshAgent component in this game object 
 
+
+    private float timePassed;
+    [Range(0, 2)]
+    public float soundLength;
     void Start()
     {
         SetGameStatus(false); 
@@ -46,12 +52,22 @@ public class PlayerMovement : MonoBehaviour
         }else
         {
             humanAnimator.SetBool("isWalking", true);
+            CheckAndPlaySound();
         }
  
     }
 
+    private void CheckAndPlaySound(){
+        timePassed += Time.deltaTime;
+        if(timePassed >= soundLength){
+            SoundManager.PlaySound(WalkingSound, 0.5f);
+            timePassed = 0;
+        }
+    }
+
     public void MoveTo(Vector3 destination) //Move player to the set destination
     {
+        SoundManager.PlaySound(pointDestinationSound, 1f);
         playerAgent.SetDestination(destination);
     }
 
@@ -61,6 +77,7 @@ public class PlayerMovement : MonoBehaviour
     {
         gameObject.transform.GetComponent<NavMeshAgent>().Warp(Vector3.zero);
         MoveTo(Vector3.zero);
+        SoundManager.PlaySound(pointDestinationSound,1f);
     }
 
 }

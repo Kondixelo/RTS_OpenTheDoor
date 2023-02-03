@@ -37,7 +37,7 @@ public class PlayerInteractions : MonoBehaviour
                 pointedObject = hitPoint.transform.gameObject;
                 objectMaterials = pointedObject.GetComponent<Renderer>().materials;
                 distanceFromObject = Vector3.Distance(gameObject.transform.position, pointedObject.transform.position);
-                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()  )
+                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && (pointedObject.tag == "Chest"||pointedObject.tag == "Door" || pointedObject.tag == "Item" ) )
                 {
                     StartCoroutine(InspectObject(pointedObject.transform.position));
                 }
@@ -61,8 +61,6 @@ public class PlayerInteractions : MonoBehaviour
         foreach (Material objMaterial in objectMaterials){
             if (objMaterial.color != colorEnd){
                 objMaterial.DOColor(colorEnd, "_Color", 0.5f);
-            }else{
-                pointedObject = null;
             }
         }
     }

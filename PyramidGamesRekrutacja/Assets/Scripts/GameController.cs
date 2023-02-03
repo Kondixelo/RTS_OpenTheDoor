@@ -6,6 +6,10 @@ using DG.Tweening;
 
 public class GameController : MonoBehaviour
 {
+    [Header("Music section")]
+    [Tooltip("Music clip which plays in background in loop")] 
+    public AudioClip backgroundMusic;
+
     [Header("Object section")]
     public GameObject uiControllerObject;
     public GameObject CameraMovingObject;
@@ -60,6 +64,7 @@ public class GameController : MonoBehaviour
         playerInv = playerObject.GetComponent<PlayerInventory>();
         uIController = uiControllerObject.GetComponent<UIController>();
         PrepareGame();
+        SoundManager.PlayMusic(backgroundMusic);
     }
 
     private void CheckPlayerPrefs()
