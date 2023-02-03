@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
+
 public class PlayerInteractions : MonoBehaviour
 {
     public UIController uIController; //Object with UIController script
@@ -38,10 +40,9 @@ public class PlayerInteractions : MonoBehaviour
                 if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()  )
                 {
                     StartCoroutine(InspectObject(pointedObject.transform.position));
-                }                
-                foreach (Material objMaterial in objectMaterials){
-                    objMaterial.color = Color.yellow;
                 }
+                ChangeColor(Color.cyan);               
+
                     
             }else
             {
@@ -49,12 +50,21 @@ public class PlayerInteractions : MonoBehaviour
                 {
                     distanceFromObject = Vector3.Distance(gameObject.transform.position, pointedObject.transform.position);
                     objectMaterials = pointedObject.GetComponent<Renderer>().materials;
-                    foreach (Material objMaterial in objectMaterials){
-                        objMaterial.color = Color.white;
-                    }
+                    ChangeColor(Color.white);
                 }
             }      
         }  
+    }
+
+    public void ChangeColor(Color colorEnd)
+    {
+        foreach (Material objMaterial in objectMaterials){
+            if (objMaterial.color != colorEnd){
+                objMaterial.DOColor(colorEnd, "_Color", 0.5f);
+            }else{
+                pointedObject = null;
+            }
+        }
     }
 
     public IEnumerator InspectObject(Vector3 objectPosition) //Inspect object and wait until distance from object object will be lass than 3 to show message 
